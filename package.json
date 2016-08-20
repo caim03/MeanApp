@@ -1,0 +1,25 @@
+{
+  "name": "mean-app",
+  "version": "1.0.0",
+  "description": "First Mean Stack application",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caim03/MeanApp.git"
+  },
+  "keywords": [
+    "MongoDB",
+    "Express",
+    "Angular",
+    "Node"
+  ],
+  "author": "caim03",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/caim03/MeanApp/issues"
+  },
+  "homepage": "https://github.com/caim03/MeanApp#readme"
+}
