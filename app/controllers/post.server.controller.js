@@ -1,20 +1,36 @@
 var mongoose = require('mongoose');
 var Post = mongoose.model('Post');
 var Comment = mongoose.model('Comment');
+var User = mongoose.model('User');
 
 /* Create a new user */
 exports.create = function(req, res, next){
-    var post = new Post(req.body);
-    post.author = req.session.user;
     
-    post.save(function(err){
-        if(err){
-            return next(err);
-        }
-        else{
-            res.json(post);
-        }
-    });
+    /* PROVA SESSIONE */
+    req.session.user = new User({
+		username : 'Caim03',
+		name : 'Christian',
+		surname : 'La Riccia',
+		mail : 'christian.lariccia@gmail.com',
+		password : 'asroma93'
+	});
+	
+    var post = new Post(req.body);
+    if(req.session.user){
+		post.author = req.session.user;
+		
+		post.save(function(err){
+			if(err){
+				return next(err);
+			}
+			else{
+				res.json(post);
+			}
+		});
+	}
+	else{
+		res.json("Session not found");
+	}
 }
 
 /* Find all user */
@@ -66,24 +82,12 @@ exports.delete = function(req, res, next){
 }
 
 exports.update = function(req, res, next){
-    req.post.update(function(err){
+    Post.findByIdAndUpdate(req.post.id, req.body, function(err, post){
         if(err){
             return next(err);
         }
         else{
-            res.json(req.post);
-        }
-    });
-}
-
-exports.upvote = function(req, res, next){
-    req.post.upvotes += 1;
-    req.post.update(function(err){
-        if(err){
-            return next(err);
-        }
-        else{
-            res.json(req.post);
+            res.json(post);
         }
     });
 }
@@ -99,7 +103,7 @@ exports.addComment = function(req, res, next){
         }
         
         req.post.comments.push(comment);
-        req.post.save((function(err, post){
+        req.post.save(function(err, post){
             if(err){
                 return next(err);
             }

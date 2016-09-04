@@ -5,6 +5,7 @@ var compression = require('compression');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var session = require('express-session');
+var passport = require('passport')
 
 var config = require('./config/config')
 
@@ -25,6 +26,14 @@ app.use(session({
 
 app.set('views', __dirname + '/app/views');
 app.set('view engine', 'ejs');
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+/* MODELS */
+require('./app/models/user.server.model.js');
+require('./app/models/post.server.model.js');
+require('./app/models/comment.server.model.js');
 
 /* ROUTES */
 require('./app/routes/index.server.routes.js')(app);
