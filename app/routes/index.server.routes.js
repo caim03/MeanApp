@@ -1,5 +1,5 @@
-var indexCtrl = require('../controllers/index.server.controller');
-
 module.exports = function(app){
-    app.get('/', indexCtrl.indexRender);
+    var indexCtrl = require('../controllers/index.server.controller');
+    
+    app.get('/', indexCtrl.render);
 }

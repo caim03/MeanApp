@@ -1,43 +1,37 @@
-/* Require all modules */
 var express = require('express');
 var mongoose = require('mongoose');
-var parser = require('body-parser');
-var override = require('method-override');
+var morgan = require('morgan');
+var compression = require('compression');
+var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
+var session = require('express-session');
 
-/* Create application object  */
+var config = require('./config/config')
+
 var app = express();
 
-/* Retrieve db path from config file  */
-var db = require('./config/db')
-
-/* Set a listen port */
 var port = process.env.PORT || 3000;
 
-/* Connetct mongoose to db */
-mongoose.connect(db.url);
+mongoose.connect(config.dbUrl);
 
-/* Use json parser */
-app.use(parser.json());
-/* Use method-override with X-HTTP-Method-Override to simulate DELETE/PUT request  */
-app.use(override('X-HTTP-Method-Override'));
-/* Use express.static to serve static file */
+app.use(bodyParser.json());
+app.use(methodOverride('X-HTTP-Method-Override'));
 app.use(express.static(__dirname + '/public'));
+app.use(session({
+    saveUninitialized: true,
+    resave: true,
+    secret: config.sessionSecret
+}));
 
-
-/* Set html as view engine to rendering pages */
 app.set('views', __dirname + '/app/views');
 app.set('view engine', 'ejs');
 
+/* ROUTES */
+require('./app/routes/index.server.routes.js')(app);
+require('./app/routes/post.server.routes.js')(app);
 
-/* Routes */
-require('./app/routes/index.server.routes')(app);
-require('./app/routes/user.server.routes')(app);
-
-/* Start server at port */
 app.listen(port);
 
-/* Log message */
-console.log('Server running at http://localhost:' + port);
+console.log('Server is running at Localhost:' + port);
 
-/* Expose app */
 module.exports = app;

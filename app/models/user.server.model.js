@@ -1,7 +1,11 @@
-/* Import mongoose module */
 var mongoose = require('mongoose');
 
-/* Create and exports the User schema  */
-module.exports = mongoose.model('User', {
-    name: {type: String, default: ''}
+var UserSchema = new mongoose.Schema({
+    username: {type: String, unique: true},
+    name: String,
+    surname: String,
+    mail: String,
+    password: String
 });
+
+mongoose.model('User', UserSchema);
